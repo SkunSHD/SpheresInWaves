@@ -20,20 +20,24 @@ ABGameMode::ABGameMode()
 
 	// Sphere settings:
 	SphereDefaultZ = 50.0f;
-	SphereOffsetSize = 80.0f;
 	SphereSize = 100.0f;
-	SpheresScaleDecreasePercent = 10.0f;
-	MinSphereScale = 0.3f;
+
+	SphereOffsetSize = 80.0f;
+	SpheresScaleDecreasePercent = 5.0f;
+	MinSphereScale = 0.5f;
 
 	// Wave settins:
 	RequiredNrOfSpheresToDestroyDuringWave = 10;
 	DefaultNrOfSpheresToSpawn = 15;
 
 	RadiusIncreasePercent = 5.0f;
-	SphereIncreasePercent = 10.0f;
+	SphereNrIncreasePercent = 10.0f;
 
 	DefaultMinRadius = 1500.0f;
 	DefaultMaxRadius = 2000.0f;
+
+	ShowDebugDrawings = false;
+
 }
 
 
@@ -42,9 +46,6 @@ void ABGameMode::StartPlay()
 	Super::StartPlay();
 
 	SpawnWave();
-
-	DrawDebugSphere(GetWorld(), SpawnCenterLoc, GetMinRadius(), 12, FColor::Yellow, false, 99999.0f, 0, 5.0f);
-	DrawDebugSphere(GetWorld(), SpawnCenterLoc, GetMaxRadius(), 12, FColor::Green, false, 99999.0f, 0, 5.0f);
 }
 
 
@@ -89,7 +90,7 @@ bool ABGameMode::IsNewSphereCloseToSome(FVector NewSphere, TArray<FVector> Other
 
 
 int32 ABGameMode::GetNrOfSpheresToSpawn() {
-	return (DefaultNrOfSpheresToSpawn * SphereIncreasePercent * (WaveNumber - 1) / 100) + DefaultNrOfSpheresToSpawn;
+	return (DefaultNrOfSpheresToSpawn * SphereNrIncreasePercent * (WaveNumber - 1) / 100) + DefaultNrOfSpheresToSpawn;
 }
 
 
@@ -103,6 +104,10 @@ void ABGameMode::BeforeWaveSpawn()
 	WaveNumber++;
 	NrOfSpheresDestroyedDuringWave = 0;
 	UpdateSpawnCenterLoc();
+	// show debug lines
+	if (ShowDebugDrawings) {
+		DrawRadiusDebugSpheres();
+	}
 }
 
 
@@ -152,7 +157,11 @@ void ABGameMode::SpawnNewSpheres(TArray<FVector> SpheresToSpawnLoc)
 		// change sphere scale
 		SpawnedSphere->GetRootComponent()->SetWorldScale3D(GetSphereScaleVectorBySpawnIndex(i));
 
-		DrawDebugSphere(GetWorld(), SphereToSpawnLoc, SphereSizeWithOffset(), 12, FColor::Purple, false, 99999.0f, 0, 1.0f);
+		// Debug sphere for offset testing
+		if (ShowDebugDrawings)
+		{
+			DrawDebugSphere(GetWorld(), SphereToSpawnLoc, SphereSizeWithOffset(), 12, FColor::Purple, false, 99999.0f, 0, 1.0f);
+		}
 
 		SpawnedSpheresLoc.Add(SphereToSpawnLoc);
 	}
@@ -184,4 +193,14 @@ FVector ABGameMode::GetSphereScaleVectorBySpawnIndex(int32 index)
 	float SphereScale = DefaultSphereScale - (SpheresScaleDecreasePercent * index / 100);
 	float CurrentSphereScale = FMath::Clamp(SphereScale, MinSphereScale, DefaultSphereScale);
 	return FVector(CurrentSphereScale);
+}
+
+
+void ABGameMode::DrawRadiusDebugSpheres()
+{
+	FlushPersistentDebugLines(GetWorld());
+
+	DrawDebugSphere(GetWorld(), SpawnCenterLoc, 25, 12, FColor::Red, false, 99999.0f, 0, 5.0f);
+	DrawDebugSphere(GetWorld(), SpawnCenterLoc, GetMinRadius(), 12, FColor::Yellow, false, 99999.0f, 0, 5.0f);
+	DrawDebugSphere(GetWorld(), SpawnCenterLoc, GetMaxRadius(), 12, FColor::Green, false, 99999.0f, 0, 5.0f);
 }

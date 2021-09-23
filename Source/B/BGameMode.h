@@ -18,13 +18,22 @@ public:
 
 protected:
 
+	UPROPERTY(EditDefaultsOnly, Category = "Ball")
+	float SphereOffsetSize;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Ball")
+	float SpheresScaleDecreasePercent;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Ball")
+	float MinSphereScale;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Wave")
+	bool ShowDebugDrawings;
+
 	float SphereSize;
 
 	UPROPERTY(BlueprintReadOnly, Category = "Wave")
 	int32 WaveNumber;
-
-	UPROPERTY(EditDefaultsOnly, Category = "Wave")
-	float SphereOffsetSize;
 
 	float SphereSizeWithOffset();
 
@@ -37,13 +46,12 @@ protected:
 	int32 GetNrOfSpheresToSpawn();
 
 	UPROPERTY(EditDefaultsOnly, Category = "Wave")
-	int32 SphereIncreasePercent;
+	int32 SphereNrIncreasePercent;
 
 	FVector SpawnCenterLoc;
 
 	void UpdateSpawnCenterLoc();
 
-	// radius
 	UPROPERTY(EditDefaultsOnly, Category = "Wave")
 	float RadiusIncreasePercent;
 
@@ -77,13 +85,9 @@ protected:
 	UPROPERTY(BlueprintReadWrite, Category = "Wave")
 	int32 NrOfSpheresDestroyedDuringWave;
 
-	UPROPERTY(EditDefaultsOnly, Category = "Wave")
-	float SpheresScaleDecreasePercent;
-
-	UPROPERTY(EditDefaultsOnly, Category = "Wave")
-	float MinSphereScale;
-
 	FVector GetSphereScaleVectorBySpawnIndex(int32 index);
+
+	void DrawRadiusDebugSpheres();
 
 public:
 	virtual void StartPlay() override;
