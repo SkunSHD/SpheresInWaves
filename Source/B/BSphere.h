@@ -9,6 +9,7 @@
 
 class UStaticMeshComponent;
 class USphereComponent;
+class UParticleSystem;
 
 
 UCLASS()
@@ -26,6 +27,9 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Components")
 	USphereComponent* SphereComp;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Effects")
+	UParticleSystem* DestroyFX;
 
 	void PlayEffects();
 

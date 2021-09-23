@@ -24,17 +24,18 @@ ABSphere::ABSphere()
 
 void ABSphere::PlayEffects()
 {
- 
+	if (!DestroyFX)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("No DestroyFX has been set!"));
+		return;
+	}
+	UGameplayStatics::SpawnEmitterAtLocation(this, DestroyFX, GetActorLocation());
 }
 
 
 void ABSphere::NotifyActorBeginOverlap(AActor* OtherActor)
 {
 	Super::NotifyActorBeginOverlap(OtherActor);
-
-	UE_LOG(LogTemp, Warning, TEXT("NotifyActorBeginOverlap"));
-
-	PlayEffects();
 
 	ABProjectile* MyProjectile = Cast<ABProjectile>(OtherActor);
 	if (MyProjectile)
@@ -45,6 +46,7 @@ void ABSphere::NotifyActorBeginOverlap(AActor* OtherActor)
 			GM->BeforeSphereDestroyed(GetActorLocation());
 		}
 
+		PlayEffects();
 		Destroy();
 		MyProjectile->Destroy();
 	}

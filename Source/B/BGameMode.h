@@ -65,6 +65,8 @@ protected:
 
 	void SpawnWave();
 
+	void BeforeWaveSpawn();
+
 	void SpawnNewSpheres(TArray<FVector> SpheresToSpawn);
 
 	float SphereDefaultZ;

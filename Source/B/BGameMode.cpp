@@ -96,11 +96,17 @@ bool ABGameMode::IsCenterSpawning(TArray<FVector> SpheresToSpawn) {
 }
 
 
-void ABGameMode::SpawnWave()
+void ABGameMode::BeforeWaveSpawn()
 {
 	WaveNumber++;
 	NrOfSpheresDestroyedDuringWave = 0;
 	UpdateSpawnCenterLoc();
+}
+
+
+void ABGameMode::SpawnWave()
+{
+	BeforeWaveSpawn();
 
 	TArray<FVector> SpheresToSpawnLoc;
 	while (SpheresToSpawnLoc.Num() < GetNrOfSpheresToSpawn())
@@ -113,15 +119,9 @@ void ABGameMode::SpawnWave()
 		UE_LOG(LogTemp, Warning, TEXT("NewSphereLoc %s"), *NewSphereLoc.ToString())
 
 		// validate new sphere location
-		if (SpheresToSpawnLoc.Contains(NewSphereLoc))
-		{
-			continue;
-		}
-		if (IsNewSphereCloseToSome(NewSphereLoc, SpheresToSpawnLoc, SphereSizeWithOffset()))
-		{
-			continue;
-		}
-		if (IsNewSphereCloseToSome(NewSphereLoc, SpawnedSpheresLoc, SphereSizeWithOffset()))
+		if (SpheresToSpawnLoc.Contains(NewSphereLoc) || 
+			IsNewSphereCloseToSome(NewSphereLoc, SpheresToSpawnLoc, SphereSizeWithOffset()) ||
+			IsNewSphereCloseToSome(NewSphereLoc, SpawnedSpheresLoc, SphereSizeWithOffset()))
 		{
 			continue;
 		}
