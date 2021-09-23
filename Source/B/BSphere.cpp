@@ -3,8 +3,10 @@
 
 #include "BSphere.h"
 #include "BProjectile.h"
+#include "BGameMode.h"
 #include "Components/StaticMeshComponent.h"
 #include "Components/SphereComponent.h"
+#include "Kismet/GameplayStatics.h"
 
 
 ABSphere::ABSphere()
@@ -37,6 +39,12 @@ void ABSphere::NotifyActorBeginOverlap(AActor* OtherActor)
 	ABProjectile* MyProjectile = Cast<ABProjectile>(OtherActor);
 	if (MyProjectile)
 	{
+		ABGameMode* GM = Cast<ABGameMode>(GetWorld()->GetAuthGameMode());
+		if (GM)
+		{
+			GM->BeforeSphereDestroyed(GetActorLocation());
+		}
+
 		Destroy();
 		MyProjectile->Destroy();
 	}

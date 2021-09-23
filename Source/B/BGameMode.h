@@ -20,14 +20,16 @@ protected:
 
 	float SphereSize;
 
+	UPROPERTY(BlueprintReadOnly, Category = "Wave")
+	int32 WaveNumber;
+
 	UPROPERTY(EditDefaultsOnly, Category = "Wave")
 	float SphereOffsetSize;
 
 	float SphereSizeWithOffset();
 
-	int32 WaveNumber;
-
-	int32 NrOfSpheresToKill;
+	UPROPERTY(EditDefaultsOnly, Category = "Wave")
+	int32 RequiredNrOfSpheresToDestroyDuringWave;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Wave")
 	int32 DefaultNrOfSpheresToSpawn;
@@ -70,8 +72,13 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Wave")
 	TSubclassOf<ABSphere> SphereClass;
 
+	UPROPERTY(BlueprintReadWrite, Category = "Wave")
+	int32 NrOfSpheresDestroyedDuringWave;
+
 public:
 	virtual void StartPlay() override;
+
+	void BeforeSphereDestroyed(FVector SphereToDestroyLoc);
 
 };
 

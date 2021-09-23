@@ -24,8 +24,7 @@ ABGameMode::ABGameMode()
 	SphereSize = 100.0f;
 
 	// Wave settins:
-	WaveNumber = 1;
-	NrOfSpheresToKill = 10;
+	RequiredNrOfSpheresToDestroyDuringWave = 10;
 	DefaultNrOfSpheresToSpawn = 15;
 
 	RadiusIncreasePercent = 5.0f;
@@ -39,7 +38,9 @@ ABGameMode::ABGameMode()
 void ABGameMode::StartPlay()
 {
 	Super::StartPlay();
+
 	SpawnWave();
+
 	DrawDebugSphere(GetWorld(), SpawnCenterLoc, GetMinRadius(), 12, FColor::Yellow, false, 99999.0f, 0, 5.0f);
 	DrawDebugSphere(GetWorld(), SpawnCenterLoc, GetMaxRadius(), 12, FColor::Green, false, 99999.0f, 0, 5.0f);
 }
@@ -91,12 +92,14 @@ int32 ABGameMode::GetNrOfSpheresToSpawn() {
 
 
 bool ABGameMode::IsCenterSpawning(TArray<FVector> SpheresToSpawn) {
-	return SpheresToSpawn.Num() <= NrOfSpheresToKill;
+	return SpheresToSpawn.Num() <= RequiredNrOfSpheresToDestroyDuringWave;
 }
 
 
 void ABGameMode::SpawnWave()
 {
+	WaveNumber++;
+	NrOfSpheresDestroyedDuringWave = 0;
 	UpdateSpawnCenterLoc();
 
 	TArray<FVector> SpheresToSpawnLoc;
@@ -150,3 +153,22 @@ void ABGameMode::SpawnNewSpheres(TArray<FVector> SpheresToSpawnLoc)
 	}
 }
 
+
+void ABGameMode::BeforeSphereDestroyed(FVector SphereToDestroyLoc)
+{
+	const float distanceToCenter = FVector::Dist(SphereToDestroyLoc, SpawnCenterLoc);
+	if (distanceToCenter < GetMinRadius())
+	{
+		UE_LOG(LogTemp, Warning, TEXT("--> close sphere destroyed!"))
+		NrOfSpheresDestroyedDuringWave++;
+	}
+
+	SpawnedSpheresLoc.Remove(SphereToDestroyLoc);
+
+	if (NrOfSpheresDestroyedDuringWave >= RequiredNrOfSpheresToDestroyDuringWave)
+	{
+		SpawnWave();
+
+		UE_LOG(LogTemp, Warning, TEXT("--> New wave has been spawned!"))
+	}
+}
