@@ -12,9 +12,6 @@ ABSphere::ABSphere()
 	SphereComp = CreateDefaultSubobject<USphereComponent>(TEXT("SphereComp"));
 	SphereComp->InitSphereRadius(50.0f);
 	SphereComp->SetCollisionResponseToAllChannels(ECR_Overlap);
-	/*SphereComp->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
-	SphereComp->SetCollisionResponseToAllChannels(ECR_Ignore);
-	SphereComp->SetCollisionResponseToChannel(ECC_WorldDynamic, ECR_Overlap);*/
 	RootComponent = SphereComp;
 
 	MeshComp = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("MeshComp"));
