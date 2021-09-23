@@ -1,6 +1,6 @@
-# Balls In Waves
+# Spheres In Waves
 
-### It's a first player shooter game where spheres are spawned in waves and there is an ability to destroy spheres just them by shooting at them.
+### It's a first player shooter game where spheres are spawned in waves and there is an ability to destroy spheres just by shooting at them.
 
 ### Game mechanics:
 
@@ -24,7 +24,8 @@
 - keep an ability to end a wave (10 spheres within the close radius)
 
 #### Other Game Features:
-- Blueprints are used for WaveScoreWidget though the most part of the game logic is written in C++
-- All settings are blueprint editable
-- UI for wave score and amount of destroyed spheres
-- Each new sphere is decreased in size by editable value and there is a minimum size
+- Blueprints are used but only a bit (WaveScoreWidget). The most part of the game's logic is written in C++
+- All settings are blueprint editable (min radius, number of spheres to spawn, etc.)
+- UI for the wave number and the amount of destroyed spheres
+- Each new sphere is decreased in size by editable value and there is a minimum size fot it
+- Debug Drawings which can be enabled in game mode settings (allow to see min/max radius, sphere offset)
