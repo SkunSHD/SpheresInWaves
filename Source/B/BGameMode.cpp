@@ -22,6 +22,8 @@ ABGameMode::ABGameMode()
 	SphereDefaultZ = 50.0f;
 	SphereOffsetSize = 80.0f;
 	SphereSize = 100.0f;
+	SpheresScaleDecreasePercent = 10.0f;
+	MinSphereScale = 0.3f;
 
 	// Wave settins:
 	RequiredNrOfSpheresToDestroyDuringWave = 10;
@@ -145,7 +147,10 @@ void ABGameMode::SpawnNewSpheres(TArray<FVector> SpheresToSpawnLoc)
 	for (int i = 0; i < SpheresToSpawnLoc.Num(); i++)
 	{
 		FVector SphereToSpawnLoc = SpheresToSpawnLoc[i];
-		GetWorld()->SpawnActor<ABSphere>(SphereClass, SphereToSpawnLoc, FRotator::ZeroRotator, SpawnParams);
+		ABSphere* SpawnedSphere = GetWorld()->SpawnActor<ABSphere>(SphereClass, SphereToSpawnLoc, FRotator::ZeroRotator, SpawnParams);
+		
+		// change sphere scale
+		SpawnedSphere->GetRootComponent()->SetWorldScale3D(GetSphereScaleVectorBySpawnIndex(i));
 
 		DrawDebugSphere(GetWorld(), SphereToSpawnLoc, SphereSizeWithOffset(), 12, FColor::Purple, false, 99999.0f, 0, 1.0f);
 
@@ -171,4 +176,12 @@ void ABGameMode::BeforeSphereDestroyed(FVector SphereToDestroyLoc)
 
 		UE_LOG(LogTemp, Warning, TEXT("--> New wave has been spawned!"))
 	}
+}
+
+FVector ABGameMode::GetSphereScaleVectorBySpawnIndex(int32 index)
+{
+	float DefaultSphereScale = 1.0f;
+	float SphereScale = DefaultSphereScale - (SpheresScaleDecreasePercent * index / 100);
+	float CurrentSphereScale = FMath::Clamp(SphereScale, MinSphereScale, DefaultSphereScale);
+	return FVector(CurrentSphereScale);
 }

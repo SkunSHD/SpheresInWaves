@@ -77,12 +77,17 @@ protected:
 	UPROPERTY(BlueprintReadWrite, Category = "Wave")
 	int32 NrOfSpheresDestroyedDuringWave;
 
+	UPROPERTY(EditDefaultsOnly, Category = "Wave")
+	float SpheresScaleDecreasePercent;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Wave")
+	float MinSphereScale;
+
+	FVector GetSphereScaleVectorBySpawnIndex(int32 index);
+
 public:
 	virtual void StartPlay() override;
 
 	void BeforeSphereDestroyed(FVector SphereToDestroyLoc);
 
 };
-
-
-
