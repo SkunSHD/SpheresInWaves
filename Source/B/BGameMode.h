@@ -18,13 +18,13 @@ public:
 
 protected:
 
-	UPROPERTY(EditDefaultsOnly, Category = "Ball")
+	UPROPERTY(EditDefaultsOnly, Category = "Spheres")
 	float SphereOffsetSize;
 
-	UPROPERTY(EditDefaultsOnly, Category = "Ball")
+	UPROPERTY(EditDefaultsOnly, Category = "Spheres")
 	float SpheresScaleDecreasePercent;
 
-	UPROPERTY(EditDefaultsOnly, Category = "Ball")
+	UPROPERTY(EditDefaultsOnly, Category = "Spheres")
 	float MinSphereScale;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Wave")
